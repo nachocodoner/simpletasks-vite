@@ -58,7 +58,10 @@
     "del-cli": "^5.0.0",
     "fkill-cli": "^7.1.0",
     "npm-run-all": "^4.1.5",
+    "rollup-plugin-conditional": "^3.1.2",
     "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-define": "^1.0.1",
+    "rollup-plugin-strip-code": "^0.2.7",
     "vite": "^5.0.12"
   },
   "meteor": {

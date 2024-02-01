@@ -1,6 +1,12 @@
 // vite.config.js
 import { defineConfig } from 'vite';
+import define from 'rollup-plugin-define';
 import copy from 'rollup-plugin-copy';
+import stripCode from 'rollup-plugin-strip-code';
+import conditional from "rollup-plugin-conditional";
+
+const isDevelopment = process.env.npm_lifecycle_script.includes('mode=development');
+const isProduction = process.env.npm_lifecycle_script.includes('mode=production');
 
 const clientCommonConfig = {
     main: './ui/main.jsx',
@@ -17,7 +23,39 @@ const clientCommonConfig = {
             external: [
                 /^(meteor.*|react|react-dom)/,
             ],
-            plugins: [copy({ targets: [{ src: './ui/main.html', dest: 'client' }] })],
+            plugins: [
+                copy({ targets: [{ src: './ui/main.html', dest: 'client' }] }),
+                define({
+                    replacements: {
+                        'Meteor.isClient': JSON.stringify(true),
+                        'Meteor.isServer': JSON.stringify(false),
+                        'Meteor.isTest': JSON.stringify(false),
+                        ...(isDevelopment ? {
+                            'Meteor.isDevelopment': JSON.stringify(true),
+                            'Meteor.isProduction': JSON.stringify(false),
+                        } : {
+                            'Meteor.isDevelopment': JSON.stringify(false),
+                            'Meteor.isProduction': JSON.stringify(true),
+                        }),
+                    },
+                }),
+                // stripCode({
+                //     start_comment: 'server:start',
+                //     end_comment: 'server:end',
+                // }),
+                // conditional(isProduction, [
+                //     stripCode({
+                //         start_comment: 'development:start',
+                //         end_comment: 'development:end',
+                //     }),
+                // ]),
+                // conditional(isDevelopment, [
+                //     stripCode({
+                //         start_comment: 'production:start',
+                //         end_comment: 'production:end',
+                //     }),
+                // ]),
+            ],
         },
         minify: false,
     },
@@ -37,6 +75,38 @@ const serverCommonConfig = {
             },
             external: [
                 /^meteor\/.*/,
+            ],
+            plugins: [
+                define({
+                    replacements: {
+                        'Meteor.isClient': JSON.stringify(false),
+                        'Meteor.isServer': JSON.stringify(true),
+                        'Meteor.isTest': JSON.stringify(false),
+                        ...(isDevelopment ? {
+                            'Meteor.isDevelopment': JSON.stringify(true),
+                            'Meteor.isProduction': JSON.stringify(false),
+                        } : {
+                            'Meteor.isDevelopment': JSON.stringify(false),
+                            'Meteor.isProduction': JSON.stringify(true),
+                        }),
+                    },
+                }),
+                // stripCode({
+                //     start_comment: 'client:start',
+                //     end_comment: 'client:end',
+                // }),
+                // conditional(isProduction, [
+                //     stripCode({
+                //         start_comment: 'development:start',
+                //         end_comment: 'development:end',
+                //     }),
+                // ]),
+                // conditional(isDevelopment, [
+                //     stripCode({
+                //         start_comment: 'production:start',
+                //         end_comment: 'production:end',
+                //     }),
+                // ]),
             ],
         },
         polyfillDynamicImport: false,
