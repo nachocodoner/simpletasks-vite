@@ -1,6 +1,6 @@
 # Simple Tasks (with Vite)
 
-Describes a configuration to use Vite with Meteor with the same approach explained in [nachocodoner/simpletasks-Vite](https://github.com/nachocodoner/simpletasks-Vite).
+Describes a configuration to use Vite with Meteor with the same approach explained in [nachocodoner/simpletasks-webpack](https://github.com/nachocodoner/simpletasks-webpack).
 
 Built using as a small example described in this repository: [fredmaiaarantes/simpletasks](https://github.com/fredmaiaarantes/simpletasks).
 
