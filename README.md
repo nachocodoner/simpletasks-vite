@@ -45,19 +45,19 @@ The scripts are described in the `package.json` and those enforce the proper dev
 ### Install dependencies
 
 ```bash
-meteor npm install
+npm install
 ```
 
 ### Running the app
 
 ```bash
-meteor npm start
+npm start
 ```
 
 ### Visualize the app bundles
 
 ```bash
-meteor npm run visualize
+npm run visualize
 ```
 
 On `http://localhost:3000` you still have the information gathered by Meteor bundle-visualizer package.
@@ -75,7 +75,7 @@ meteor reset
 To clean the Meteor's and Vite's cache, including node_modules.
 
 ```bash
-meteor npm run clean
+npm run clean
 ```
 
 Useful to avoid compilation errors caused by the state of caches. Don't forget to `meteor npm install` again.
@@ -83,5 +83,5 @@ Useful to avoid compilation errors caused by the state of caches. Don't forget t
 ### Deploy to Galaxy with free MongoDB
 
 ```bash
-meteor npm run deploy -- --free --mongo
+npm run deploy -- --free --mongo
 ```
