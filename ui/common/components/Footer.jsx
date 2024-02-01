@@ -83,7 +83,7 @@ export function Footer() {
             }}
         >
           <a href="https://webpack.js.org" target="_blank">
-            Webpack
+            Vite
           </a>
           {' '}by{' '}
           <a href="https://twitter.com/nachocodoner" target="_blank">
