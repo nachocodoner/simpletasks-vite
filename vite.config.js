@@ -2,11 +2,8 @@
 import { defineConfig } from 'vite';
 import copy from 'rollup-plugin-copy';
 import stripCode from 'rollup-plugin-strip-code';
-import conditional from 'rollup-plugin-conditional';
 
 const isDevelopment = process.env.npm_lifecycle_script.includes('mode=development');
-console.log("-> isDevelopment", isDevelopment);
-const isProduction = process.env.npm_lifecycle_script.includes('mode=production');
 
 const developmentVsProductionDefineConfig = isDevelopment ? {
     'Meteor.isDevelopment': JSON.stringify(true),
@@ -128,6 +125,7 @@ const target = process.env.TARGET || 'client';
 const isClient = target === 'client';
 const isServer = target === 'server';
 
+// eslint-disable-next-line import/no-default-export
 export default defineConfig(({ mode }) => {
     switch (mode) {
         case 'development':
