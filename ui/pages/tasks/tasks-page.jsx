@@ -5,6 +5,11 @@ import { Box, Button, Heading, HStack, Spinner, Stack, Text, useColorModeValue }
 import { TaskItem } from './components/task-item';
 import { useTasks } from './hooks/use-tasks';
 
+/* production:start */
+// eslint-disable-next-line no-console
+console.log('-> THIS LOG WILL ONLY APPEAR IN PRODUCTION');
+/* production:end */
+
 /* eslint-disable import/no-default-export */
 export default function TasksPage() {
   const { hideDone, setHideDone, tasks, pendingCount } = useTasks();

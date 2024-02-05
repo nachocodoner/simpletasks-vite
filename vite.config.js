@@ -1,17 +1,43 @@
 // vite.config.js
 import { defineConfig } from 'vite';
-import define from 'rollup-plugin-define';
 import copy from 'rollup-plugin-copy';
 import stripCode from 'rollup-plugin-strip-code';
-import conditional from "rollup-plugin-conditional";
+import conditional from 'rollup-plugin-conditional';
 
 const isDevelopment = process.env.npm_lifecycle_script.includes('mode=development');
+console.log("-> isDevelopment", isDevelopment);
 const isProduction = process.env.npm_lifecycle_script.includes('mode=production');
+
+const developmentVsProductionDefineConfig = isDevelopment ? {
+    'Meteor.isDevelopment': JSON.stringify(true),
+    'Meteor.isProduction': JSON.stringify(false),
+} : {
+    'Meteor.isDevelopment': JSON.stringify(false),
+    'Meteor.isProduction': JSON.stringify(true),
+};
+
+function excludeBlockStrip(excludeConfig) {
+    return excludeConfig?.exclude
+        ? {
+            ...stripCode({
+                start_comment: `${excludeConfig.exclude}:start`,
+                end_comment: `${excludeConfig.exclude}:end`,
+            }),
+            enforce: 'pre',
+            apply: 'build',
+        }
+        : undefined;
+}
+
+const excludeBlockStripByMode = isDevelopment
+    ? excludeBlockStrip({ exclude: 'production' })
+    : excludeBlockStrip({ exclude: 'development' });
 
 const clientCommonConfig = {
     main: './ui/main.jsx',
     build: {
         outDir: 'client',
+        emptyOutDir: false,
         target: 'modules',
         rollupOptions: {
             input: {
@@ -25,46 +51,27 @@ const clientCommonConfig = {
             ],
             plugins: [
                 copy({ targets: [{ src: './ui/main.html', dest: 'client' }] }),
-                define({
-                    replacements: {
-                        'Meteor.isClient': JSON.stringify(true),
-                        'Meteor.isServer': JSON.stringify(false),
-                        'Meteor.isTest': JSON.stringify(false),
-                        ...(isDevelopment ? {
-                            'Meteor.isDevelopment': JSON.stringify(true),
-                            'Meteor.isProduction': JSON.stringify(false),
-                        } : {
-                            'Meteor.isDevelopment': JSON.stringify(false),
-                            'Meteor.isProduction': JSON.stringify(true),
-                        }),
-                    },
-                }),
-                // stripCode({
-                //     start_comment: 'server:start',
-                //     end_comment: 'server:end',
-                // }),
-                // conditional(isProduction, [
-                //     stripCode({
-                //         start_comment: 'development:start',
-                //         end_comment: 'development:end',
-                //     }),
-                // ]),
-                // conditional(isDevelopment, [
-                //     stripCode({
-                //         start_comment: 'production:start',
-                //         end_comment: 'production:end',
-                //     }),
-                // ]),
             ],
         },
         minify: false,
     },
+    define: {
+        'Meteor.isClient': JSON.stringify(true),
+        'Meteor.isServer': JSON.stringify(false),
+        'Meteor.isTest': JSON.stringify(false),
+        ...developmentVsProductionDefineConfig,
+    },
+    plugins: [
+        excludeBlockStrip({ exclude: 'server' }),
+        excludeBlockStripByMode,
+    ],
 };
 
 const serverCommonConfig = {
     main: './api/main.js',
     build: {
         outDir: 'server',
+        emptyOutDir: false,
         target: 'modules',
         rollupOptions: {
             input: {
@@ -76,42 +83,20 @@ const serverCommonConfig = {
             external: [
                 /^meteor\/.*/,
             ],
-            plugins: [
-                define({
-                    replacements: {
-                        'Meteor.isClient': JSON.stringify(false),
-                        'Meteor.isServer': JSON.stringify(true),
-                        'Meteor.isTest': JSON.stringify(false),
-                        ...(isDevelopment ? {
-                            'Meteor.isDevelopment': JSON.stringify(true),
-                            'Meteor.isProduction': JSON.stringify(false),
-                        } : {
-                            'Meteor.isDevelopment': JSON.stringify(false),
-                            'Meteor.isProduction': JSON.stringify(true),
-                        }),
-                    },
-                }),
-                // stripCode({
-                //     start_comment: 'client:start',
-                //     end_comment: 'client:end',
-                // }),
-                // conditional(isProduction, [
-                //     stripCode({
-                //         start_comment: 'development:start',
-                //         end_comment: 'development:end',
-                //     }),
-                // ]),
-                // conditional(isDevelopment, [
-                //     stripCode({
-                //         start_comment: 'production:start',
-                //         end_comment: 'production:end',
-                //     }),
-                // ]),
-            ],
         },
         polyfillDynamicImport: false,
         minify: false,
     },
+    define: {
+        'Meteor.isClient': JSON.stringify(true),
+        'Meteor.isServer': JSON.stringify(false),
+        'Meteor.isTest': JSON.stringify(false),
+        ...developmentVsProductionDefineConfig,
+    },
+    plugins: [
+        excludeBlockStrip({ exclude: 'client' }),
+        excludeBlockStripByMode,
+    ],
 };
 
 const clientDevelopmentConfig = {
