@@ -4,7 +4,7 @@ Describes a configuration to use Vite with Meteor with the same approach explain
 
 Built using as a small example described in this repository: [fredmaiaarantes/simpletasks](https://github.com/fredmaiaarantes/simpletasks).
 
-Demo: SOON
+Demo: https://simpletasksvite.meteorapp.com
 
 Original: https://simpletasks.meteorapp.com
 
@@ -83,5 +83,5 @@ Useful to avoid compilation errors caused by the state of caches. Don't forget t
 ### Deploy to Galaxy with free MongoDB
 
 ```bash
-npm run deploy -- --free --mongo
+npm run deploy -- --free --mongo <site>
 ```
