@@ -1,9 +1,11 @@
 // vite.config.js
 import { defineConfig } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 import copy from 'rollup-plugin-copy';
 import stripCode from 'rollup-plugin-strip-code';
 
 const isDevelopment = process.env.npm_lifecycle_script.includes('mode=development');
+const enableBundleVisualizer = process.env.ENABLE_BUNDLE_VISUALIZER === 'true';
 
 const developmentVsProductionDefineConfig = isDevelopment ? {
     'Meteor.isDevelopment': JSON.stringify(true),
@@ -48,7 +50,8 @@ const clientCommonConfig = {
             ],
             plugins: [
                 copy({ targets: [{ src: './ui/main.html', dest: 'client' }] }),
-            ],
+                enableBundleVisualizer && visualizer({ open: true, filename: 'public/stats.html' }),
+            ].filter(Boolean),
         },
         minify: false,
     },
@@ -80,6 +83,9 @@ const serverCommonConfig = {
             external: [
                 /^meteor\/.*/,
             ],
+            plugins: [
+                enableBundleVisualizer && visualizer({ open: true, filename: 'public/stats.html' }),
+            ].filter(Boolean),
         },
         polyfillDynamicImport: false,
         minify: false,

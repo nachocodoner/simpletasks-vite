@@ -3,6 +3,7 @@ client/
 server/
 public/bundles
 dist/
+public/stats.html
 
 # Logs
 logs

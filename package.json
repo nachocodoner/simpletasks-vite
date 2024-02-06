@@ -9,8 +9,8 @@
     "start:vite:server": "TARGET=server vite build --config=vite.config.js --mode=development",
     "start:vite": "concurrently -n start:vite:client,start:vite:server \"npm run start:vite:client\" \"npm run start:vite:server\"",
     "start": "npm run start:vite && concurrently -n start:meteor,start:vite:client,start:vite:server \"npm run start:meteor\" \"npm run start:vite:client -- --watch\" \"npm run start:vite:server -- --watch\"",
-    "build:vite:client": "vite build --config-name=client-production --mode=production",
-    "build:vite:server": "vite build --config-name=server-production --mode=production",
+    "build:vite:client": "TARGET=client vite build --config=vite.config.js --mode=production",
+    "build:vite:server": "TARGET=server vite build --config=vite.config.js --mode=production",
     "build:vite": "concurrently -n build:vite:client,build:vite:server \"npm run build:vite:client\" \"npm run build:vite:server\"",
     "build:meteor": "del-cli ./dist && meteor build --directory ./dist && meteor npm install --prefix ./dist/bundle/programs/server",
     "build": "npm run build:vite && npm run build:meteor",
@@ -62,6 +62,7 @@
     "rollup-plugin-conditional": "^3.1.2",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-strip-code": "^0.2.7",
+    "rollup-plugin-visualizer": "^5.12.0",
     "shortscale": "^4.1.1",
     "vite": "^5.0.12"
   },

@@ -3,3 +3,4 @@ dist
 ui
 api
 templates
+stats.html
