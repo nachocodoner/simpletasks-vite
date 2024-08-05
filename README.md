@@ -1,3 +1,11 @@
+
+**This approach is slower than [using webpack](https://github.com/nachocodoner/simpletasks-webpack).**
+
+Meteor acts as the dev server while Vite is the bundler, using vite build, which [doesn't support fast rebuilds as noted here](https://github.com/vitejs/vite/issues/16104).
+
+Webpack performs better because it caches incremental builds, ensuring fast recompilations. Rollup has similar performance. Hopefully, Vite will address this issue soon.
+
+
 # Simple Tasks (with Vite)
 
 Describes a configuration to use Vite with Meteor with the same approach explained in [nachocodoner/simpletasks-webpack](https://github.com/nachocodoner/simpletasks-webpack).
